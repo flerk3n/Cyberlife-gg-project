@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hill Climb Racing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui">
+            <div id="stats">
+                <div>Distance: <span id="distance">0</span>m</div>
+                <div>Speed: <span id="speed">0</span> km/h</div>
+                <div>Crashes: <span id="crashes">0</span></div>
+            </div>
+            
+            <div class="terrain-warning" id="terrainWarning">
+                ⚠️ Danger Zone Ahead!
+            </div>
+            
+            <div id="aiSuggestion">
+                <div id="suggestionText"></div>
+                <button onclick="closeSuggestion()" style="margin-top: 10px; padding: 5px 15px; background: #00ff00; color: black; border: none; border-radius: 5px; cursor: pointer;">Got it!</button>
+            </div>
+            
+            <div id="gameOver">
+                <h2>Game Over!</h2>
+                <p id="crashReason"></p>
+                <p>Distance: <span id="finalDistance"></span>m</p>
+                <button id="restartBtn" onclick="restartGame()">Try Again</button>
+            </div>
+            
+            <div class="power-bar" id="gasBar">
+                <div class="bar-fill" id="gasBarFill"></div>
+            </div>
+            
+            <div class="power-bar" id="brakeBar">
+                <div class="bar-fill" id="brakeBarFill"></div>
+            </div>
+            
+            <div class="bar-label" id="gasLabel">GAS: 0%</div>
+            <div class="bar-label" id="brakeLabel">BRAKE: 0%</div>
+            
+            <div id="controls">
+                <div class="control-btn" id="gasBtn">GAS</div>
+                <div class="control-btn" id="brakeBtn">BRAKE</div>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html> 
