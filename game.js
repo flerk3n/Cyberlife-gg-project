@@ -48,81 +48,46 @@ class HillClimbGame {
     }
     
     generateTerrain() {
-        const width = this.canvas.width;
-        const height = this.canvas.height;
-        const points = [];
-        const segments = 100;
-        const segmentWidth = width / segments;
+        const terrain = [];
+        let y = 500;
+        let amplitude = 50;
+        let frequency = 0.02;
         
-        // Base height for the terrain
-        let baseHeight = height * 0.7;
-        
-        // Generate initial points with smooth sine waves
-        for (let i = 0; i <= segments; i++) {
-            const x = i * segmentWidth;
+        // Add more variety to terrain generation
+        for (let x = 0; x < 5000; x += 10) {
+            // Base terrain with multiple sine waves
+            y += Math.sin(x * 0.01) * 15;
+            y += Math.sin(x * frequency) * amplitude;
+            y += Math.sin(x * frequency * 0.5) * amplitude * 0.5;
             
-            // Multiple sine waves for natural-looking terrain
-            const wave1 = Math.sin(i * 0.1) * 100;
-            const wave2 = Math.sin(i * 0.05) * 50;
-            const wave3 = Math.sin(i * 0.02) * 25;
+            // Add random bumps for more natural look
+            if (Math.random() < 0.1) {
+                y += (Math.random() - 0.5) * 20;
+            }
             
-            // Combine waves and add some randomness
-            let y = baseHeight + wave1 + wave2 + wave3;
-            
-            // Add gentle random variations
-            y += (Math.random() - 0.5) * 20;
-            
-            // Ensure terrain stays within bounds
-            y = Math.max(height * 0.3, Math.min(height * 0.8, y));
-            
-            points.push({ x, y });
-        }
-        
-        // Smooth the terrain using moving average
-        const smoothedPoints = [];
-        const smoothingWindow = 3; // Window size for smoothing
-        
-        for (let i = 0; i < points.length; i++) {
-            let sumY = 0;
-            let count = 0;
-            
-            // Calculate average of surrounding points
-            for (let j = -smoothingWindow; j <= smoothingWindow; j++) {
-                const index = i + j;
-                if (index >= 0 && index < points.length) {
-                    sumY += points[index].y;
-                    count++;
+            // Create more interesting hills
+            if (x % 800 === 0) {
+                amplitude = 70;
+                frequency = 0.025;
+                // Add a steep climb
+                for (let i = 0; i < 5; i++) {
+                    y -= 10;
+                }
+            } else if (x % 400 === 0) {
+                amplitude = 50;
+                frequency = 0.02;
+                // Add a gentle slope
+                for (let i = 0; i < 3; i++) {
+                    y -= 5;
                 }
             }
             
-            smoothedPoints.push({
-                x: points[i].x,
-                y: sumY / count
-            });
-        }
-        
-        // Apply additional smoothing for very steep sections
-        for (let i = 1; i < smoothedPoints.length - 1; i++) {
-            const prev = smoothedPoints[i - 1];
-            const curr = smoothedPoints[i];
-            const next = smoothedPoints[i + 1];
+            // Keep terrain within bounds
+            y = Math.max(300, Math.min(600, y));
             
-            // Calculate slopes
-            const slope1 = Math.abs(curr.y - prev.y) / segmentWidth;
-            const slope2 = Math.abs(next.y - curr.y) / segmentWidth;
-            
-            // If slope is too steep, smooth it out
-            if (slope1 > 0.5 || slope2 > 0.5) {
-                smoothedPoints[i].y = (prev.y + next.y) / 2;
-            }
+            terrain.push({ x, y });
         }
-        
-        // Ensure the starting area is flat for the car
-        for (let i = 0; i < 10; i++) {
-            smoothedPoints[i].y = smoothedPoints[0].y;
-        }
-        
-        this.terrain = smoothedPoints;
+        return terrain;
     }
     
     setupControls() {
